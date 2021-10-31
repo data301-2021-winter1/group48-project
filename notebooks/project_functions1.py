@@ -2,11 +2,7 @@
 import pandas as pd
 import numpy as np
 import matplotlib.pyplot as plt
-%matplotlib inline
-%reload_ext autoreload
-%autoreload 2
 import seaborn as sns
-
 
 
 def load_and_process(url_path):
@@ -33,12 +29,12 @@ def load_and_process(url_path):
               .drop('prfname', 1) )
     
     for col in df1.columns:
-        df1[col].replace({np.nan:0.0}, inplace=True)
+        df1[col].replace({np.nan:0}, inplace=True)
         df1[col].replace({'na':0.0}, inplace=True)
         
     #since we must alter all three of these columns to remove string literals best we use a loop.
     #fixcolumns (fixcol) holds the name of each column head we wish to alter in our for loop.
-    fixcol = ['prop_atleast1dose', 'prop_partially', 'prop_fully']
+    fixcol = ['prop_atleast1dose', 'prop_partially', 'prop_fully', 'numtotal_partially']
     
     for e in fixcol:
         df1[e].replace(regex=True, inplace=True, to_replace=r'[^0-9.\-]',value=r'')
@@ -79,3 +75,37 @@ Since we are interested in segregating the data based on the region, this method
     dff = pd.merge(new1, new2, on='week_end', how = 'inner')
     
     return dff
+
+
+
+def region(reg):
+    
+    di = {1:'Canada', 10:'Newfoundland and Labrador', 12:'Nova Scotia', 24:'Quebec',
+       46:'Manitoba', 47:'Saskatchewan', 59:'British Columbia', 60:'Yukon',
+       61:'Northwest Territories', 62:'Nunavut', 11:'Prince Edward Island',
+       13:'New Brunswick', 48:'Alberta', 35:'Ontario'}
+    
+    return di[reg]
+
+
+def viscompar(dataframe, regn):
+    '''
+    Viscompar will take the data frame and plot both y axis separatly 
+    
+    argument 1 (Dataframe): Input selected dataframe from databyregion
+    
+    Returns: 
+    
+    A 
+    '''
+    
+    
+    plt.figure(figsize=(20,10))
+    plt.title(f"Total Number of Partial/Fully Vaccinated in {region(regn)} Over 39 Weeks", fontsize=18)
+    plt.plot('week_end','sumTotFul', data=dataframe, label='Fully Vaxed', linestyle='-', marker='o')
+  
+    plt.plot('week_end','sumTotPartially', data=dataframe, label='Partially Vaxed', linestyle='-', marker='o')
+    
+    
+    return plt
+
