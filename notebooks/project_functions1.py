@@ -96,16 +96,137 @@ def viscompar(dataframe, regn):
     
     Returns: 
     
-    A 
+    All plots comprised of partially and fully vaccinated over the 39 week interval
+    
     '''
     
     
     plt.figure(figsize=(20,10))
     plt.title(f"Total Number of Partial/Fully Vaccinated in {region(regn)} Over 39 Weeks", fontsize=18)
     plt.plot('week_end','sumTotFul', data=dataframe, label='Fully Vaxed', linestyle='-', marker='o')
+    
   
     plt.plot('week_end','sumTotPartially', data=dataframe, label='Partially Vaxed', linestyle='-', marker='o')
     
+    plt.legend()
     
     return plt
 
+
+
+def findMaxFully(dataframe):
+    '''
+    This method will take a cleaned data frame and iterate through all the unique regions, and will create a new data frame containing the prename, the week of the max of partial or fully 
+    
+    argument 1 (DataFrame): Input whole uncleaned dataframe
+    
+    Returns:
+    
+    (DataFrame): Comprised of the max weeks for fully vaccinated by each region
+    
+    '''
+    #first we are going to take our data frame and find its unique regions
+    regionid = dataframe['pruid'].unique()
+    
+    #this new dataframe will store our max week and number of fully vaccinated
+    data1 = pd.DataFrame(columns= ['Region','Week', 'NumFully'])
+    
+    for e in regionid:
+        #here we create our dataframe based on the regions found in regionid 
+        dt = databyRegion(dataframe, e)
+        
+        #We wish to find the max element in column sumTotful
+        column = dt['sumTotFul']
+
+        #We can call max() on this column to return our max value efficently
+        max_val = column.max()
+        
+        #We use idxmax() to find the index position of the max element in order to determine its corresponding week
+        Col_ind = column.idxmax()
+        
+        #We can now use the index position to find the week
+        week = dt[(dt.index == Col_ind)]
+        #Since week is returned as a pandas datatime, we get excessive string characters that are not needed
+        week2 = str(week['week_end'])
+        #Hence we string splice then enter this splice into our new frame
+        week3 = week2[3:15]
+        reg = region(e)
+        
+        data1 = data1.append({'Region':reg, 'Week':week3, 'NumFully':max_val}, ignore_index=True)
+        #This process will iterate over each region
+        
+    #this will clear away any string literals that get past our splicing procedure
+    data1['Week'].replace(regex=True, inplace=True, to_replace=r'[^0-9.\-]',value=r'')
+    data1['Week'] = data1['Week'].astype(str)
+    
+    data1['Week'] = data1['Week'].apply(pd.to_datetime)
+
+    return data1
+
+
+def findMaxPartial(dataframe):
+    '''
+    This method will take a cleaned data frame and iterate through all the unique regions, and will create a new data frame containing the prename, the week of the max of partial or fully 
+    
+    argument 1 (DataFrame): Input whole uncleaned dataframe
+    
+    Returns:
+    
+    (DataFrame): Comprised of the max weeks for Partially vaccinated by each region
+    
+    '''
+    
+     #first we are going to take our data frame and find its unique regions
+    regionid = dataframe['pruid'].unique()
+    
+    #this new dataframe will store our max week and number of fully vaccinated
+    data1 = pd.DataFrame(columns= ['Region','Week', 'NumPartially'])
+    
+    for e in regionid:
+        #here we create our dataframe based on the regions found in regionid 
+        dt = databyRegion(dataframe, e)
+        
+        #We wish to find the max element in column sumTotful
+        column = dt['sumTotPartially']
+
+        #We can call max() on this column to return our max value efficently
+        max_val = column.max()
+        
+        #We use idxmax() to find the index position of the max element in order to determine its corresponding week
+        Col_ind = column.idxmax()
+        
+        #We can now use the index position to find the week
+        week = dt[(dt.index == Col_ind)]
+        #Since week is returned as a pandas datatime, we get excessive string characters that are not needed
+        week2 = str(week['week_end'])
+        #Hence we string splice then enter this splice into our new frame
+        week3 = week2[3:15]
+        reg = region(e)
+        
+        data1 = data1.append({'Region':reg, 'Week':week3, 'NumPartially':max_val}, ignore_index=True)
+        #This process will iterate over each region
+    
+    #this will clear away any string literals that get past our splicing procedure
+    data1['Week'].replace(regex=True, inplace=True, to_replace=r'[^0-9.\-]',value=r'')
+    data1['Week'] = data1['Week'].astype(str)
+    
+    data1['Week'] = data1['Week'].apply(pd.to_datetime)
+    
+
+    return data1
+
+
+def showRelationship(dataframe):
+    '''
+    This method will display a joint plot between the change in partially vacinated vs fully vaccinated, from here we can see the relative assent to fully vaccinated by examining the two slopes that form from our resultant graph. This method will take a databyregion dataframe and produce a seaborn jointplot 
+    
+    argument 1 (DataFrame): This data frame must be specific to each region
+    
+    Returns:
+    
+    A Seaborn joint plot, showing the relationship between partially and fully vaccinated in each region.
+    '''
+    
+    sns.jointplot(x='sumTotFul', y='sumTotPartially', data=dataframe, kind='reg')
+    
+    return plt
