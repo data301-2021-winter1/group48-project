@@ -107,9 +107,9 @@ def viscompar(dataframe, regn):
     
   
     plt.plot('week_end','sumTotPartially', data=dataframe, label='Partially Vaxed', linestyle='-', marker='o')
-    
+   
+
     plt.legend()
-    
     return plt
 
 
