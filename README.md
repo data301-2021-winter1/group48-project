@@ -18,18 +18,16 @@ Details for Milestone are available on Canvas (left sidebar, Course Project) or 
 
 - Joe Gaspari: Third year Computer Science student with a degree in Biochemistry. My interests in public health, in relation to this vaccine stems from my knowledge surrounding virology and epidemiology. This data interests me as this vaccine is being callously viewed by the public as being unsafe, untested or even unproven. The spread of miss information and political factors all impact the public view, leading some populations to show slow inclines of immunization.
 
-- Duvidu Arsakulasuriya: Fourth year Management student who is aspiring to be a Financial Accountant.
-- Ivan Matos: Thid year international student at UBCO, currently pursuing a Computer Science major and a Visual Arts minor.
-
-## Images
-
-{You can use this area for any images you want to include}
-
-<img src ="images/test.png" width="100px">
 
 ## References
 
 [link to data set:] (https://open.canada.ca/data/en/dataset/fa34dce5-66f7-4ae6-9d58-310008d9c2b7/resource/da6dc702-e001-4456-ae9b-933b9d84abe6)
 
+## Analysis 
 
+The analysis can be found in the notebook section.
+
+The Tableau dashboard can be found in data/processed/JoeProcessed/Project.twb along with all processed CSV data. 
+
+There is a separate notebook that summarizes the analysis and includes a conclusion and new graphs.
 
